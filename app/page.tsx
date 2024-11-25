@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +10,12 @@ import { Label } from "@/components/ui/label"
 export default function Home() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,6 +27,14 @@ export default function Home() {
     if (result?.error) {
       alert(result.error)
     }
+  }
+
+  if (!isClient) {
+    return null // Return null on server-side to avoid hydration mismatch
+  }
+
+  if (status === "loading") {
+    return <div>Loading...</div>
   }
 
   if (session) {
@@ -71,3 +84,4 @@ export default function Home() {
     </div>
   )
 }
+
