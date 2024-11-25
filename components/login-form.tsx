@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
@@ -16,14 +16,14 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const res = await signIn('credentials', {
+      const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
       })
 
-      if (res?.error) {
-        alert(res.error)
+      if (result?.error) {
+        alert(result.error)
       } else {
         router.push('/dashboard')
       }
@@ -35,7 +35,7 @@ export default function LoginForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Login to Auto Parts Quotation</CardTitle>
+        <CardTitle>Login to CotizaRep</CardTitle>
         <CardDescription>Enter your credentials to access the system</CardDescription>
       </CardHeader>
       <CardContent>
@@ -68,3 +68,4 @@ export default function LoginForm() {
     </Card>
   )
 }
+

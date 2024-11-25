@@ -3,6 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from '@/lib/prismadb'
 import bcrypt from 'bcrypt'
 
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error('Please provide process.env.NEXTAUTH_SECRET')
+}
+
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -16,9 +20,16 @@ export default NextAuth({
           throw new Error('Invalid credentials')
         }
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.usuarios.findUnique({
           where: {
             email: credentials.email
+          },
+          select: {
+            usuario_id: true,
+            email: true,
+            nombre: true,
+            password: true,
+            tipo_usuario: true
           }
         })
 
@@ -35,7 +46,12 @@ export default NextAuth({
           throw new Error('Invalid credentials')
         }
 
-        return user
+        return {
+          id: user.usuario_id.toString(),
+          email: user.email,
+          name: user.nombre,
+          role: user.tipo_usuario
+        }
       }
     })
   ],
@@ -57,7 +73,7 @@ export default NextAuth({
         session.user.id = token.id as string
         session.user.email = token.email as string
         session.user.name = token.name as string
-        session.user.role = token.role as string
+        session.user.role = token.role as number
       }
       return session
     },
