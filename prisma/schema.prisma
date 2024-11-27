@@ -18,5 +18,48 @@ model Usuarios {
   telefono       String?
   tipo_usuario   Int
   fecha_registro DateTime? @default(now())
+  solicitudes    SolicitudesCotizacion[]
+  cotizaciones   Cotizaciones[]
 }
+
+model TiposUsuarios {
+  id          Int    @id @default(autoincrement())
+  nombre      String
+  descripcion String
+}
+
+model SolicitudesCotizacion {
+  solicitud_id   Int      @id @default(autoincrement())
+  usuario_id     Int
+  marca          String   @db.VarChar(50)
+  modelo         String   @db.VarChar(100)
+  vin            String   @db.VarChar(17)
+  descripcion    String?  @db.Text
+  fecha_creacion DateTime @default(now())
+  estado         String   @default("Pendiente")
+  usuario        Usuarios @relation(fields: [usuario_id], references: [usuario_id])
+  items          ItemsCotizacion[]
+  cotizaciones   Cotizaciones[]
+}
+
+model ItemsCotizacion {
+  item_id      Int                   @id @default(autoincrement())
+  solicitud_id Int
+  categoria    String                @db.VarChar(50)
+  descripcion  String                @db.Text
+  cantidad     Int                   @default(1)
+  solicitud    SolicitudesCotizacion @relation(fields: [solicitud_id], references: [solicitud_id])
+}
+
+model Cotizaciones {
+  cotizacion_id Int      @id @default(autoincrement())
+  solicitud_id  Int
+  vendedor_id   Int
+  respuesta     String   @db.Text
+  estado        String   @default("Enviada")
+  fecha_creacion DateTime @default(now())
+  solicitud     SolicitudesCotizacion @relation(fields: [solicitud_id], references: [solicitud_id])
+  vendedor      Usuarios @relation(fields: [vendedor_id], references: [usuario_id])
+}
+
 

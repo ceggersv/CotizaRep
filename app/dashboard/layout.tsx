@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import { getServerSession } from "next-auth/next"
 import { redirect } from 'next/navigation'
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
@@ -19,11 +18,11 @@ export default async function DashboardLayout({
     <div>
       <NavBar />
       <main className="container mx-auto px-4 py-8">
-        <Suspense fallback={<div>Loading...</div>}>
-          {children}
-        </Suspense>
+        {children}
       </main>
     </div>
   )
 }
+
+
 

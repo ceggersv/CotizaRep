@@ -1,5 +1,6 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
@@ -21,12 +22,13 @@ interface QuotationRequest {
   estado: string
 }
 
-export default function CustomerDashboard() {
+export default function BuyerDashboard() {
+  const { data: session } = useSession()
   const [quotations, setQuotations] = useState<QuotationRequest[]>([])
 
   useEffect(() => {
     const fetchQuotations = async () => {
-      const response = await fetch('/api/customer/quotations')
+      const response = await fetch('/api/buyer/quotations')
       if (response.ok) {
         const data = await response.json()
         setQuotations(data)

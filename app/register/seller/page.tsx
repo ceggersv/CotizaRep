@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
@@ -9,35 +8,41 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 
-export default function LoginForm() {
+export default function SellerRegistrationPage() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    })
-
-    if (result?.error) {
-      console.error(result.error)
-    } else {
-      router.push('/dashboard')
-    }
+    // TODO: Implement seller registration logic
+    console.log('Seller registration:', { name, email, password })
+    // Redirect to login page after successful registration
+    router.push('/login')
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login to CotizaRep</CardTitle>
-          <CardDescription>Enter your credentials to access the system</CardDescription>
+          <CardTitle>Register as a Seller</CardTitle>
+          <CardDescription>Create your seller account for CotizaRep</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                autoComplete="name"
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -59,29 +64,19 @@ export default function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                autoComplete="current-password"
+                autoComplete="new-password"
               />
             </div>
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit" className="w-full">Register</Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-gray-500">
-            Don't have an account? Register as a:
-          </div>
-          <div className="flex space-x-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/register/seller">Seller</Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/register/customer">Customer</Link>
-            </Button>
-          </div>
-          <div className="mt-2">
-            <Button asChild variant="link" size="sm">
-              <Link href="/">Back to Home</Link>
-            </Button>
-          </div>
+        <CardFooter className="flex justify-between">
+          <Button asChild variant="link" size="sm">
+            <Link href="/login">Already have an account? Login</Link>
+          </Button>
+          <Button asChild variant="link" size="sm">
+            <Link href="/">Back to Home</Link>
+          </Button>
         </CardFooter>
       </Card>
     </div>
